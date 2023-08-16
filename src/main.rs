@@ -21,14 +21,19 @@ fn main() {
 
     for run_number in 1..=num_executions {
         let start = Instant::now();
-        let output = Command::new(command)
+        let output = Command::new("time")
+            .arg("-p")
+            .arg(command)
             .output()
             .expect("Failed to execute command");
+
         let duration = start.elapsed().as_millis();
 
         if output.status.success() {
             let result = String::from_utf8_lossy(&output.stdout);
             println!("Command executed successfully:\n{}", result);
+            let time = String::from_utf8_lossy(&output.stderr);
+            println!("Output:\n{}", time);
         } else {
             let error = String::from_utf8_lossy(&output.stderr);
             println!("Command failed:\n{}", error);
